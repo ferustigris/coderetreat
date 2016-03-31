@@ -15,9 +15,10 @@
 	
 	// Создаем плагин
 	$.fn.countdown = function(prop){
-		
+		var self = this;
 		var options = $.extend({
 			callback	: function(){},
+			onComplete	: function(){},
 			timestamp	: 0
 		},prop);
 		
@@ -28,13 +29,14 @@
 		
 		positions = this.find('.position');
 		
-		(function tick(){
+		self.tick = function (){
 			
 			// Осталось времени
 			left = Math.floor((options.timestamp - (new Date())) / 1000);
 			console.log("left")
 			if(left < 0){
 				left = 0;
+				options.onComplete();
 			}
 			
 	
@@ -51,8 +53,8 @@
 			options.callback(0, 0, m, s);
 			
 			// Планируем следующий вызов данной функции через 1 секунду
-			setTimeout(tick, 1000);
-		})();
+			setTimeout(self.tick, 1000);
+		};
 		
 		// Данная функция обновляет две цифоровые позиции за один раз
 		function updateDuo(minor,major,value){
@@ -142,6 +144,7 @@
 			$.fn.gen = function() {
 				setTimeout(function() {
 					updateDuo(0, 1, Math.floor(Math.random()*100 % 32));
+					prop.callback();
 				}, 1000);	
 			}
 		return this;

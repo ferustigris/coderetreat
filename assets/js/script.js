@@ -2,8 +2,11 @@ $(function(){
 	var note = $('#note'),
 	ts = (new Date()).getTime() + 45*60*1000;
 
-	$('#countdown').countdown({
+	var cool = $('#countdown').countdown({
 		timestamp	: ts,
+		onComplete  : function(){
+			$("#start").button( "enable" );
+		},
 		callback	: function(days, hours, minutes, seconds){
 			
 			var message = "";
@@ -11,7 +14,7 @@ $(function(){
 			message += "минут: " + minutes + " и ";
 			message += "секунд: " + seconds + " <br />";
 			
-			message += "осталось до окончания сессии!";
+			message += "до окончания сессии!";
 			
 			note.html(message);
 		}
@@ -19,22 +22,17 @@ $(function(){
 
 	$('#countdown2').countdown2({
 		timestamp	: ts,
-		callback	: function(days, hours, minutes, seconds){
-			
-			var message = "";
-			
-			message += "Дней: " + days +", ";
-			message += "часов: " + hours + ", ";
-			message += "минут: " + minutes + " и ";
-			message += "секунд: " + seconds + " <br />";
-			
-			message += "осталось до момента через 10 дней!";
-			
-			note.html(message);
+		callback	: function(){
+			$("#gen").button( "enable" );
 		}
 	});
 	
 	$("#gen").button().click(function () {
 		$.fn.gen();
+		$("#gen").button( "disable" );
+	});
+	$("#start").button().click(function () {
+		cool.tick();
+		$("#start").button( "disable" );
 	});
 });
